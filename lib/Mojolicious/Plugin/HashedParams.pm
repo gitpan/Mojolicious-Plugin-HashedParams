@@ -2,7 +2,7 @@ package Mojolicious::Plugin::HashedParams;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub register {
   my ( $plugin, $app ) = @_;
@@ -25,7 +25,7 @@ sub register {
 
           map $array[$index] .= "{$list[$_]}", 0 .. $#list;
 
-          $array[$index] .= " = $hprms->{$p};";
+          $array[$index] .= " = '$hprms->{$p}';";
           $index++;
         }
 
@@ -34,6 +34,7 @@ sub register {
         $code .= '$h;';
 
         my $ret = eval $code;
+        warn @$ if $@;
 
         if ( %$ret ) {
           if ( @permit ) {
@@ -82,7 +83,7 @@ Mojolicious::Plugin::HashedParams - Transformation request parameters into a has
 
 =head1 AUTHOR
 
-Grishkovelli L<grishkovelli@gmail.com>
+Grishkovelli L<grishkovelli@gmail.com>, L<Git Repository|https://github.com/grishkovelli/Mojolicious-Plugin-HashedParams>
 
 =head1 COPYRIGHT
 
